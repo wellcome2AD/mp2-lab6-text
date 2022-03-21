@@ -22,9 +22,4 @@
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Main.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-  </ItemGroup>
 </Project>

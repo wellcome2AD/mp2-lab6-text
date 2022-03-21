@@ -10,7 +10,7 @@ class TStack
 	int Size, NumLast;
 
 public:
-	TStack(int _size = 10) : Size(_size) 
+	TStack(int _size = 100) : Size(_size) 
 	{
 		Stack = new T[Size];
 		NumLast = -1;
