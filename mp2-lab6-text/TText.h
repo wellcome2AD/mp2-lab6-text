@@ -1,18 +1,78 @@
 #pragma once
 #include <fstream>
 #include <cstring>
-#include "..\mp2-lab3-stack\TStack.h"
+#include "TStack.h"
 
 #define MAX_SIZE 80
+struct TMem 
+{
+	TNode* pFirst; // pointer at the begin
+	TNode* pFree; // pointer at the first free node
+	TNode* pLast; // pointer at the last node
+};
 struct TNode
 {
 	char str[MAX_SIZE];
 	TNode* pNext, * pDown;
-	TNode(const char str[] = "", TNode* pNext = nullptr, TNode* pDown = nullptr) : pNext(pNext), pDown(pDown) {
+	static TMem mem;
+	bool flag = false;
+	TNode(const char str[] = "", TNode* pNext = nullptr, TNode* pDown = nullptr) : pNext(pNext), pDown(pDown) 
+	{
 		if (str == nullptr)
 			*this->str = '\0';
 		else
 			strcpy_s(this->str, str);
+	}
+	void* operator new(size_t size) 
+	{
+		TNode* res = mem.pFree;
+		if (mem.pFree)
+			mem.pFree = mem.pFree->pNext;
+		return res;
+	}
+	void operator delete(void* del) 
+	{
+		if (del) 
+		{
+			TNode* del_node = (TNode*)del;
+			TNode* pLastFree = mem.pFree;
+			mem.pFree = del_node;
+			mem.pFree->pNext = pLastFree;
+		}
+	}
+	static void InitMem(int s = 100)
+	{
+		mem.pFirst = (TNode*) new char[sizeof(TNode) * s];
+		mem.pFree = mem.pFirst;
+		mem.pLast = mem.pFirst + s - 1;
+		TNode* p = mem.pFirst;
+		for (int i = 0; i < s - 1; i++, p++)
+		{
+			p->pNext = p + 1;
+			p->str[0] = '\0';
+			p->flag = false;
+		}
+		p->pNext = nullptr;
+	}
+	static void CleanMem(TText& txt) {
+		TNode* p = mem.pFree;
+		while (p) {
+			p->flag = true;
+			p = p->pNext;
+		}
+		for (txt.Reset(); !txt.IsEnd(); txt.GoNext()) {
+			// to do: write TText::SetFlag that sets flag & pCurr
+			txt.SetFlag();
+		}
+		for (p = mem.pFirst; p <= mem.pLast; p++) {
+			if (!p->flag) {
+				delete p;
+				p->flag = true;
+			}
+		}
+	}
+	static void PrintFree() {
+
 	}
 };
 
@@ -125,5 +185,32 @@ public:
 		if (ofs.is_open()) {
 			PrintRec(ofs, pFirst);
 		}
+	}
+	void Reset() {
+		st.Clear();
+		pCurr = pFirst;
+		st.Push(pCurr);
+		if (pCurr) {
+			if (pCurr->pNext)
+				st.Push(pCurr->pNext);
+			if (pCurr->pDown)
+				st.Push(pCurr->pDown);
+		}
+	}
+	void GoNext() {
+		pCurr = st.Pop();
+		if(pCurr != pFirst){
+			if (pCurr) {
+				if (pCurr->pNext)
+					st.Push(pCurr->pNext);
+				if (pCurr->pDown)
+					st.Push(pCurr->pDown);
+			}
+		}
+	}
+	bool IsEnd() { return st.IsEmpty(); }
+	void SetFlag() {}
+	TNode* CopyNode(TNode* p) {
+
 	}
 };
