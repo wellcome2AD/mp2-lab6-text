@@ -34,6 +34,13 @@ void TText::GoDownLine() {
 	}
 }
 
+const char* TText::GetCurrent()
+{
+	if (pCurr)
+		return pCurr->str;
+	return "";
+}
+
 void TText::GoFirst() {
 	pCurr = pFirst;
 	st.Clear();
@@ -130,7 +137,7 @@ void TText::PrintRec(std::ofstream& ofs, TNode* p, int level_count)
 	}
 }
 
-void TText::Print(char const* filename) {
+void TText::PrintToFile(char const* filename) {
 	std::ofstream ofs(filename);
 	if (ofs.is_open()) {
 		PrintRec(ofs, pFirst);

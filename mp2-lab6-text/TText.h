@@ -27,16 +27,15 @@ public:
 	void GoNextLine();
 	void GoDownLine();
 	void GoFirst();
+	const char* GetCurrent();
 	void InsNextLine(char str[]);
 	void InsDownLine(char str[]);
 	void InsNextSection(char str[]);
 	void InsDownSection(char str[]);
 	void DelNextLine();
 	void DelDownLine();
-	TNode* ReadRec(std::ifstream& ifs);
 	void ReadFromFile(char const* filename);
-	void PrintRec(std::ofstream& ofs, TNode* p, int level_count = 0);
-	void Print(char const* filename);
+	void PrintToFile(char const* filename);
 	void Reset();
 	void GoNext();
 	bool IsEnd();
@@ -45,6 +44,8 @@ public:
 	TText* Copy();
 private:
 	TNode* CreateNode(const char str[] = "", TNode* pNext = nullptr, TNode* pDown = nullptr);
+	TNode* ReadRec(std::ifstream& ifs);
+	void PrintRec(std::ofstream& ofs, TNode* p, int level_count = 0);
 };
 
 struct TNode {
@@ -76,7 +77,7 @@ struct TNode {
 			mem.pFree->pNext = pLastFree;
 		}
 	}
-	static void InitMem(int s = 3)
+	static void InitMem(int s = 10)
 	{
 		mem.pFirst = (TNode*) new char[sizeof(TNode) * s];
 		mem.pFree = mem.pFirst;

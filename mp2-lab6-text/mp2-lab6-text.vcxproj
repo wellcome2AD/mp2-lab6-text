@@ -139,10 +139,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="gtest-all.cc" />
+    <ClCompile Include="test_main.cpp" />
+    <ClCompile Include="test_ttest.cpp" />
     <ClCompile Include="TText.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="gtest.h" />
     <ClInclude Include="TException.h" />
     <ClInclude Include="TStack.h" />
     <ClInclude Include="TText.h" />
