@@ -20,54 +20,60 @@ TText::~TText()
 	TNode::CleanMem(*this, true);
 }
 
-void TText::GoNextLine() {
+void TText::GoNextLine() const 
+{
 	if (pCurr != nullptr) {
 		st.Push(pCurr);
 		pCurr = pCurr->pNext;
 	}
 }
 
-void TText::GoDownLine() {
+void TText::GoDownLine() const {
 	if (pCurr != nullptr) {
 		st.Push(pCurr);
 		pCurr = pCurr->pDown;
 	}
 }
 
-const char* TText::GetCurrent()
+const char* TText::GetCurrent() const
 {
 	if (pCurr)
 		return pCurr->str;
 	return "";
 }
 
-void TText::GoFirst() {
+void TText::GoFirst() const 
+{
 	pCurr = pFirst;
 	st.Clear();
 }
 
-void TText::InsNextLine(char str[]) { //insert next element on the same level
+void TText::InsNextLine(const char* str) //insert next element on the same level
+{ 
 	if (pCurr != nullptr) {
 		TNode* newStr = CreateNode(str, pCurr->pNext);
 		pCurr->pNext = newStr;
 	}
 }
 
-void TText::InsDownLine(char str[]) { //insert next element on the same level
+void TText::InsDownLine(const char* str) //insert next element on the same level
+{ 
 	if (pCurr != nullptr) {
 		TNode* newStr = CreateNode(str, pCurr->pDown);
 		pCurr->pDown = newStr;
 	}
 }
 
-void TText::InsNextSection(char str[]) {
+void TText::InsNextSection(const char* str)
+{
 	if (pCurr != nullptr) {
 		TNode* newStr = CreateNode(str, nullptr, pCurr->pNext);
 		pCurr->pNext = newStr;
 	}
 }
 
-void TText::InsDownSection(char str[]) {
+void TText::InsDownSection(const char* str) 
+{
 	if (pCurr != nullptr) {
 		TNode* newStr = CreateNode(str, nullptr, pCurr->pDown);
 		pCurr->pDown = newStr;
@@ -94,11 +100,12 @@ void TText::DelDownLine() {
 	}
 }
 
-TNode* TText::ReadRec(std::ifstream& ifs) {
+TNode* TText::ReadRec(std::ifstream& ifs) const 
+{
 	TNode* pHead = nullptr, * pTemp = nullptr;
-	char buf[MAX_SIZE];
+	char buf[MAX_STRING_SIZE];
 	while (!ifs.eof()) {
-		ifs.getline(buf, MAX_SIZE, '\n');
+		ifs.getline(buf, MAX_STRING_SIZE, '\n');
 		if (buf[0] == '}')
 			break;
 		else if (buf[0] == '{')
@@ -123,28 +130,33 @@ void TText::ReadFromFile(char const* filename) {
 	}
 }
 
-void TText::PrintRec(std::ofstream& ofs, TNode* p, int level_count)
+void TText::PrintRec(std::ofstream& ofs, TNode* p, int level_count) const
 {
 	const int space_count = level_count * 2;
+	bool is_head = p == pFirst;
 	if (p != nullptr) {
-		ofs << std::string(space_count, ' ') << p->str << std::endl;
+		if (!is_head)
+			ofs << std::endl;
+		ofs << std::string(space_count, ' ') << p->str;
 		if (p->pDown != nullptr)
-			ofs << std::string(space_count, ' ') << '{' << std::endl;
+			ofs << std::endl << std::string(space_count, ' ') << '{';
 		PrintRec(ofs, p->pDown, level_count + 1);
 		if (p->pDown != nullptr)
-			ofs << std::string(space_count, ' ') << '}' << std::endl;
+			ofs << std::endl << std::string(space_count, ' ') << '}';
 		PrintRec(ofs, p->pNext, level_count);
 	}
 }
 
-void TText::PrintToFile(char const* filename) {
+void TText::PrintToFile(char const* filename) const
+{
 	std::ofstream ofs(filename);
 	if (ofs.is_open()) {
 		PrintRec(ofs, pFirst);
 	}
 }
 
-void TText::Reset() {
+void TText::Reset() const 
+{
 	st.Clear();
 	pCurr = pFirst;
 	st.Push(pCurr);
@@ -156,7 +168,8 @@ void TText::Reset() {
 	}
 }
 
-void TText::GoNext() {
+void TText::GoNext() const
+{
 	pCurr = st.Pop();
 	if (pCurr != pFirst) {
 		if (pCurr) {
@@ -168,23 +181,24 @@ void TText::GoNext() {
 	}
 }
 
-bool TText::IsEnd() { return pCurr == nullptr || st.IsEmpty(); }
+bool TText::IsEnd() const { return pCurr == nullptr || st.IsEmpty(); }
 
-void TText::SetFlag() { pCurr->isNotGarbage = true; }
+void TText::SetFlag() const { pCurr->isNotGarbage = true; }
 
-TNode* TText::CopyNode(TNode* p) {
+TNode* TText::CopyNode(TNode* p) const 
+{
 	TNode* pN = nullptr, * pD = nullptr, * res;
 	if (p->pNext)
 		pN = CopyNode(p->pNext);
 	if (p->pDown)
-		pN = CopyNode(p->pDown);
+		pD = CopyNode(p->pDown);
 	res = CreateNode(p->str, pN, pD);
 	return res;
 }
 
-TText* TText::Copy() { return new TText(CopyNode(pFirst)); }
+TText* TText::Copy() const { return new TText(CopyNode(pFirst)); }
 
-TNode* TText::CreateNode(const char str[], TNode* pNext, TNode* pDown)
+TNode* TText::CreateNode(const char str[], TNode* pNext, TNode* pDown) const
 {
 	TNode* res = new TNode(str, pNext, pDown);
 	if (res == nullptr)
@@ -200,7 +214,8 @@ TNode* TText::CreateNode(const char str[], TNode* pNext, TNode* pDown)
 	return res;
 }
 
-void TNode::CleanMem(TText& txt, bool should_i_remove_text) {
+void TNode::CleanMem(const TText& txt, bool should_i_remove_text) 
+{
 	TNode* p = mem.pFree;
 	while (p) {
 		p->isNotGarbage = true;
@@ -224,4 +239,18 @@ void TNode::CleanMem(TText& txt, bool should_i_remove_text) {
 			p->isNotGarbage = true;
 		}
 	}
+}
+
+bool TText::operator==(const TText& other) const 
+{ 
+	for (this->Reset(), other.Reset(); !this->IsEnd() && !other.IsEnd(); this->GoNext(), other.GoNext())
+	{
+		const char* this_cur = this->GetCurrent();
+		const char* other_cur = other.GetCurrent();
+		if (strcmp(this_cur, other_cur))
+			return false;
+	}
+	if (!this->IsEnd() || !other.IsEnd())
+		return false;
+	return true;
 }

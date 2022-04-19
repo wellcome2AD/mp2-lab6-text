@@ -9,4 +9,3 @@ MAIN_TITLE
     TEXT
   }
 }
-
