@@ -1,0 +1,11 @@
+MAIN_TITLE
+  {
+  TITLE1
+    {
+    TEXT
+    }
+  TITLE2
+    {
+    TEXT
+    }
+  }

@@ -1,6 +1,8 @@
 #pragma once
 #include "TStack.h"
 #include <cstring>
+#include <fstream>
+#include <iostream>
 
 #define MAX_STRING_SIZE 80
 #define MAX_MEMORY_SIZE 80
@@ -26,6 +28,7 @@ public:
 	TText(TNode* _pFirst);
 	~TText();
 	bool operator==(const TText& other) const;
+	friend std::ostream& operator<<(std::ostream&, const TText&);
 	
 	void InsNextLine(const char* str);
 	void InsDownLine(const char* str);
@@ -51,7 +54,7 @@ private:
 	friend TNode;
 	TNode* CreateNode(const char str[] = "", TNode* pNext = nullptr, TNode* pDown = nullptr) const;
 	TNode* ReadRec(std::ifstream& ifs) const;
-	void PrintRec(std::ofstream& ofs, TNode* p, int level_count = 0) const;
+	void PrintRec(std::ostream& os, TNode* p, int level_count, int& line_number, bool print_to_file) const;
 	void SetFlag() const;
 	TNode* CopyNode(TNode* p) const;
 };
@@ -102,7 +105,8 @@ struct TNode {
 	static void PrintFree() {
 		TNode* p = mem.pFree;
 		std::cout << "Free nodes:" << std::endl;
-		while (p) {
+		while (p) 
+		{
 			std::cout << p->str << std::endl;
 			p = p->pNext;
 		}

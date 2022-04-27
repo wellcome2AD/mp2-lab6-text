@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{35fe35fe-8ddb-40c6-a471-3e0477919904}</ProjectGuid>
-    <RootNamespace>mp2lab6text</RootNamespace>
+    <ProjectGuid>{b3540ec3-39a2-4ac8-82ef-4cc5c344294f}</ProjectGuid>
+    <RootNamespace>Tests</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -139,13 +139,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Main.cpp" />
-    <ClCompile Include="TText.cpp" />
+    <ClCompile Include="..\mp2-lab6-text\gtest-all.cc" />
+    <ClCompile Include="..\mp2-lab6-text\test_main.cpp" />
+    <ClCompile Include="..\mp2-lab6-text\test_ttest.cpp" />
+    <ClCompile Include="..\mp2-lab6-text\TText.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="TException.h" />
-    <ClInclude Include="TStack.h" />
-    <ClInclude Include="TText.h" />
+    <ClInclude Include="..\mp2-lab6-text\gtest.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
