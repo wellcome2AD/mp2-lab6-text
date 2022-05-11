@@ -139,13 +139,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\mp2-lab6-text\gtest-all.cc" />
-    <ClCompile Include="..\mp2-lab6-text\test_main.cpp" />
-    <ClCompile Include="..\mp2-lab6-text\test_ttest.cpp" />
     <ClCompile Include="..\mp2-lab6-text\TText.cpp" />
+    <ClCompile Include="gtest-all.cc" />
+    <ClCompile Include="test_main.cpp" />
+    <ClCompile Include="test_ttest.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\mp2-lab6-text\gtest.h" />
+    <ClInclude Include="gtest.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
